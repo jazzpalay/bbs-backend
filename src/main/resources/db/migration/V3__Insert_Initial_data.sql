@@ -1,0 +1,1 @@
+INSERT INTO user(id, username, email, password_hash) VALUES(X'd61b54470cf0435588cf1d1589bf6546', 'ryoga_gt', 'jazzmaster@gmail.com','$2a$10$aRoGY90Hq3rANnYGvQHaFO0hNvSsMhkyECpFm1TML3z9qyi92f4c.');

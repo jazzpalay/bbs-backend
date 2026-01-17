@@ -1,0 +1,12 @@
+spring:
+    datasource:
+        url: ${DB_URL}
+        username: ${DB_USERNAME}
+        password: ${DB_PASSWORD}
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    flyway:
+        baseline-version: 2.0
+        enabled: true
+        baseline-on-migrate: true
+mybatis:
+    mapper-locations: classpath*:db/mapper/**/*.xml

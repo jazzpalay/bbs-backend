@@ -1,0 +1,12 @@
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+
+mybatis:
+  mapper-locations: classpath:db/mapper/**/*.xml
+
+spring.flyway.enabled: true
+spring.flyway.locations: classpath:db/migration
+

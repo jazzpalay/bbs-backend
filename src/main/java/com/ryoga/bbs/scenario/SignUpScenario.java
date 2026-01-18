@@ -1,33 +1,34 @@
 package com.ryoga.bbs.scenario;
 
+import com.ryoga.bbs.domain.authentication.AuthenticationService;
 import com.ryoga.bbs.domain.model.user.*;
 import com.ryoga.bbs.domain.type.Id;
 import com.ryoga.bbs.scenario.command.SignInCommand;
 import com.ryoga.bbs.scenario.command.SignUpCommand;
 import com.ryoga.bbs.scenario.exception.DuplicateMailAddressScenarioException;
 import com.ryoga.bbs.scenario.exception.DuplicateUserNameScenarioException;
+import com.ryoga.bbs.scenario.exception.UserNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SignUpScenario {
 
-    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationService authenticationService;
 
     private final UserService userService;
 
-    public SignUpScenario(PasswordEncoder passwordEncoder, UserService userService) {
-        this.passwordEncoder = passwordEncoder;
+    public SignUpScenario(AuthenticationService authenticationService, UserService userService) {
+        this.authenticationService = authenticationService;
         this.userService = userService;
     }
-
 
     public void signUp(SignUpCommand command) throws DuplicateUserNameScenarioException, DuplicateMailAddressScenarioException {
         // ユーザーIDを生成
         UserId userId = new UserId(Id.generate());
 
         // パスワードをハッシュ化
-        HashedPassword hashedPassword = new HashedPassword(passwordEncoder.encode(command.getPassword()));
+        HashedPassword hashedPassword = authenticationService.createHashPassword(command.getPassword());
 
         // ユーザーを作成
         User user = new User(
@@ -50,6 +51,18 @@ public class SignUpScenario {
     }
 
     public void signIn(SignInCommand command) {
+
+        MailAddress mailAddress = new MailAddress(command.getMailAddress());
+        // メールアドレスが存在しているか
+        if(!userService.existsByMailAddress(mailAddress)) {
+            throw new UserNotFoundException("メールアドレスまたはパスワードが正しくありません");
+        }
+
+        User user = userService.getUserByMailAddress(mailAddress);
+        // ハッシュパスワードの比較
+        if(!authenticationService.checkPassword(command.getPassword(), user.getHashedPassword().value())) {
+            throw new UserNotFoundException("メールアドレスまたはパスワードが正しくありません");
+        }
 
     }
 }

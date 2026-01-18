@@ -4,7 +4,7 @@ import com.ryoga.bbs.domain.model.user.*;
 import com.ryoga.bbs.domain.type.Id;
 import com.ryoga.bbs.infrastructure.database.DataBaseException;
 import com.ryoga.bbs.infrastructure.database.command.user.RecordEntity.UserRecordEntity;
-import com.ryoga.tools.MySQLTool;
+import com.ryoga.bbs.util.MySQLTool;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

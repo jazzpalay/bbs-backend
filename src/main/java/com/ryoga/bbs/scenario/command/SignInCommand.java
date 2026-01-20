@@ -1,6 +1,6 @@
 package com.ryoga.bbs.scenario.command;
 
-import com.ryoga.bbs.controller.api.user.Form.SignInForm;
+import com.ryoga.bbs.controller.api.user.form.SignInForm;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

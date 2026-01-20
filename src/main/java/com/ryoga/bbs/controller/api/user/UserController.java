@@ -1,7 +1,8 @@
 package com.ryoga.bbs.controller.api.user;
 
-import com.ryoga.bbs.controller.api.user.Form.SignInForm;
-import com.ryoga.bbs.controller.api.user.Form.SignUpForm;
+import com.ryoga.bbs.controller.api.user.form.SignInForm;
+import com.ryoga.bbs.controller.api.user.form.SignUpForm;
+import com.ryoga.bbs.controller.api.user.response.SignInResponse;
 import com.ryoga.bbs.scenario.SignUpScenario;
 import com.ryoga.bbs.scenario.command.SignInCommand;
 import com.ryoga.bbs.scenario.command.SignUpCommand;
@@ -32,10 +33,11 @@ public class UserController {
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<Void> signIn(@RequestBody SignInForm form) {
+    public ResponseEntity<SignInResponse> signIn(@RequestBody SignInForm form) {
         SignInCommand command = SignInCommand.toCommand(form);
-        signUpScenario.signIn(command);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        String jwt = signUpScenario.signIn(command);
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + jwt)
+                .body(SignInResponse.of(jwt));
     }
-
 }

@@ -50,7 +50,7 @@ public class SignUpScenario {
         userService.signUp(user);
     }
 
-    public void signIn(SignInCommand command) {
+    public String signIn(SignInCommand command) {
 
         MailAddress mailAddress = new MailAddress(command.getMailAddress());
         // メールアドレスが存在しているか
@@ -64,5 +64,7 @@ public class SignUpScenario {
             throw new UserNotFoundException("メールアドレスまたはパスワードが正しくありません");
         }
 
+        //jwt作成
+        return authenticationService.authenticate(user.getUserId().value());
     }
 }

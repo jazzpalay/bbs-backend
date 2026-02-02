@@ -3,6 +3,7 @@ CREATE TABLE post (
     user_id             BINARY(16) NOT NULL,
     title               VARCHAR(255) NOT NULL,
     content             TEXT       NOT NULL,
+    deleted             BOOLEAN NOT NULL DEFAULT 0,
     created_at          TIMESTAMP  NOT NULL    DEFAULT     CURRENT_TIMESTAMP(),
     updated_at          TIMESTAMP  NOT NULL    DEFAULT     CURRENT_TIMESTAMP()      ON UPDATE CURRENT_TIMESTAMP(),
     PRIMARY KEY(id)
@@ -13,6 +14,7 @@ CREATE TABLE comment (
     post_id             BINARY(16) NOT NULL,
     user_id             BINARY(16) NOT NULL,
     content             TEXT       NOT NULL,
+    deleted             BOOLEAN NOT NULL DEFAULT 0,
     created_at          TIMESTAMP  NOT NULL    DEFAULT     CURRENT_TIMESTAMP(),
     updated_at          TIMESTAMP  NOT NULL    DEFAULT     CURRENT_TIMESTAMP()      ON UPDATE CURRENT_TIMESTAMP(),
     PRIMARY KEY(id),
@@ -26,5 +28,7 @@ CREATE TABLE user (
     password_hash       VARCHAR(255) NOT NULL,
     created_at          TIMESTAMP  NOT NULL    DEFAULT     CURRENT_TIMESTAMP(),
     updated_at          TIMESTAMP  NOT NULL    DEFAULT     CURRENT_TIMESTAMP()      ON UPDATE CURRENT_TIMESTAMP(),
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    UNIQUE(username),
+    UNIQUE(email)
 );

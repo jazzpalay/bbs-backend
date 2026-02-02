@@ -4,7 +4,7 @@ import com.ryoga.bbs.domain.type.DomainLogicInvalidException;
 
 public class UserName {
 
-    private String value;
+    private final String value;
 
     public UserName(String value) {
         if(value == null || value.isEmpty()) {

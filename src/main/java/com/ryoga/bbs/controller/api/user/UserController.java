@@ -1,41 +1,59 @@
 package com.ryoga.bbs.controller.api.user;
 
-import com.ryoga.bbs.controller.api.user.Form.SignInForm;
-import com.ryoga.bbs.controller.api.user.Form.SignUpForm;
+import com.ryoga.bbs.controller.api.user.form.SignInForm;
+import com.ryoga.bbs.controller.api.user.form.SignUpForm;
+import com.ryoga.bbs.controller.api.user.response.SignInResponse;
+import com.ryoga.bbs.scenario.SignInScenario;
 import com.ryoga.bbs.scenario.SignUpScenario;
 import com.ryoga.bbs.scenario.command.SignInCommand;
 import com.ryoga.bbs.scenario.command.SignUpCommand;
 import com.ryoga.bbs.scenario.exception.DuplicateMailAddressScenarioException;
 import com.ryoga.bbs.scenario.exception.DuplicateUserNameScenarioException;
+import com.ryoga.bbs.scenario.result.SignInResult;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.Duration;
 
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
 
     private final SignUpScenario signUpScenario;
+    private final SignInScenario signInScenario;
 
-    public UserController(SignUpScenario signUpScenario) {
+    public UserController(SignUpScenario signUpScenario, SignInScenario signInScenario) {
         this.signUpScenario = signUpScenario;
+        this.signInScenario = signInScenario;
     }
 
-    @PostMapping("/sign-up")
+    @PostMapping("/auth/sign-up")
     public ResponseEntity<Void> signUp(@RequestBody SignUpForm form) throws DuplicateMailAddressScenarioException, DuplicateUserNameScenarioException {
         SignUpCommand command = SignUpCommand.toCommand(form);
         signUpScenario.signUp(command);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/sign-in")
-    public ResponseEntity<Void> signIn(@RequestBody SignInForm form) {
-        SignInCommand command = SignInCommand.toCommand(form);
-        signUpScenario.signIn(command);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+    @PostMapping("/auth/sign-in")
+    public ResponseEntity<SignInResponse> signIn(@RequestHeader("X-Device-Id") String deviceId, @RequestBody SignInForm form) {
+        SignInCommand command = SignInCommand.toCommand(form, deviceId);
+        SignInResult signInResult = signInScenario.signIn(command);
 
+        ResponseCookie responseCookie = ResponseCookie
+                .from("refreshToken", signInResult.refreshToken())
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .path("/api/v1/users/auth")
+                .maxAge(Duration.ofDays(14))
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .header("Authorization", "Bearer " + signInResult.accessToken())
+                .body(SignInResponse.of(signInResult.accessToken()));
+    }
 }

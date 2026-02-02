@@ -1,0 +1,14 @@
+CREATE TABLE refresh_tokens (
+    id BINARY(16) NOT NULL,
+    device_id BINARY(16) NOT NULL,
+    user_id BINARY(16) NOT NULL,
+    token BINARY(16) NOT NULL UNIQUE,
+    expires_at DATETIME NOT NULL,
+    revoked BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
+        ON UPDATE CURRENT_TIMESTAMP(),
+    PRIMARY KEY(id),
+    UNIQUE(token),
+    FOREIGN KEY(user_id) REFERENCES user(id)
+);

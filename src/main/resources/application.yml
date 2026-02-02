@@ -10,3 +10,6 @@ spring:
         baseline-on-migrate: true
 mybatis:
     mapper-locations: classpath*:db/mapper/**/*.xml
+jwt:
+    secret: ${JWT_SECRET}
+    expiration-ms: ${JWT_EXPIRATION_MS}

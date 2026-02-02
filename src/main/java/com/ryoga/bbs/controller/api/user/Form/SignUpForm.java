@@ -1,4 +1,4 @@
-package com.ryoga.bbs.controller.api.user.Form;
+package com.ryoga.bbs.controller.api.user.form;
 
 import lombok.Data;
 

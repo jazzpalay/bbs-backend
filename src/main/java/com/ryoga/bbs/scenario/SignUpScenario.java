@@ -1,33 +1,31 @@
 package com.ryoga.bbs.scenario;
 
+import com.ryoga.bbs.domain.model.authentication.AuthenticationService;
 import com.ryoga.bbs.domain.model.user.*;
 import com.ryoga.bbs.domain.type.Id;
-import com.ryoga.bbs.scenario.command.SignInCommand;
 import com.ryoga.bbs.scenario.command.SignUpCommand;
 import com.ryoga.bbs.scenario.exception.DuplicateMailAddressScenarioException;
 import com.ryoga.bbs.scenario.exception.DuplicateUserNameScenarioException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SignUpScenario {
 
-    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationService authenticationService;
 
     private final UserService userService;
 
-    public SignUpScenario(PasswordEncoder passwordEncoder, UserService userService) {
-        this.passwordEncoder = passwordEncoder;
+    public SignUpScenario(AuthenticationService authenticationService, UserService userService) {
+        this.authenticationService = authenticationService;
         this.userService = userService;
     }
-
 
     public void signUp(SignUpCommand command) throws DuplicateUserNameScenarioException, DuplicateMailAddressScenarioException {
         // ユーザーIDを生成
         UserId userId = new UserId(Id.generate());
 
         // パスワードをハッシュ化
-        HashedPassword hashedPassword = new HashedPassword(passwordEncoder.encode(command.getPassword()));
+        HashedPassword hashedPassword = authenticationService.createHashPassword(command.getPassword());
 
         // ユーザーを作成
         User user = new User(
@@ -47,9 +45,5 @@ public class SignUpScenario {
         }
         // ユーザーを保存
         userService.signUp(user);
-    }
-
-    public void signIn(SignInCommand command) {
-
     }
 }

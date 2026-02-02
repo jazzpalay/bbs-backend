@@ -1,7 +1,7 @@
 package com.ryoga.bbs.infrastructure.database.command.user;
 
 import com.ryoga.bbs.infrastructure.database.command.user.RecordEntity.UserRecordEntity;
-import com.ryoga.tools.MySQLTool;
+import com.ryoga.bbs.util.MySQLTool;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.annotation.MapperScan;
@@ -13,8 +13,6 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;

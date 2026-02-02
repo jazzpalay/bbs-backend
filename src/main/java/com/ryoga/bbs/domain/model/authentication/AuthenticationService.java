@@ -74,6 +74,10 @@ public class AuthenticationService {
         authenticationRepository.deleteRefreshToken(userId, deviceId);
     }
 
+    public RefreshToken findByRefreshToken(String refreshToken) {
+        return authenticationRepository.findByRefreshToken(refreshToken);
+    }
+
     public void revokeExistingRefreshToken(UserId userId, DeviceId deviceId){
         authenticationRepository.revokeRefreshToken(userId, deviceId);
     }

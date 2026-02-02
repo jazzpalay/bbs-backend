@@ -2,7 +2,9 @@ package com.ryoga.bbs.controller.api.user;
 
 import com.ryoga.bbs.controller.api.user.form.SignInForm;
 import com.ryoga.bbs.controller.api.user.form.SignUpForm;
+import com.ryoga.bbs.controller.api.user.response.RefreshTokenResponse;
 import com.ryoga.bbs.controller.api.user.response.SignInResponse;
+import com.ryoga.bbs.scenario.RefreshTokenScenario;
 import com.ryoga.bbs.scenario.SignInScenario;
 import com.ryoga.bbs.scenario.SignUpScenario;
 import com.ryoga.bbs.scenario.command.SignInCommand;
@@ -24,10 +26,12 @@ public class UserController {
 
     private final SignUpScenario signUpScenario;
     private final SignInScenario signInScenario;
+    private final RefreshTokenScenario refreshTokenScenario;
 
-    public UserController(SignUpScenario signUpScenario, SignInScenario signInScenario) {
+    public UserController(SignUpScenario signUpScenario, SignInScenario signInScenario, RefreshTokenScenario refreshTokenScenario) {
         this.signUpScenario = signUpScenario;
         this.signInScenario = signInScenario;
+        this.refreshTokenScenario = refreshTokenScenario;
     }
 
     @PostMapping("/auth/sign-up")
@@ -55,5 +59,13 @@ public class UserController {
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .header("Authorization", "Bearer " + signInResult.accessToken())
                 .body(SignInResponse.of(signInResult.accessToken()));
+    }
+
+    @PostMapping("/auth/refresh")
+    public ResponseEntity<RefreshTokenResponse> refreshToken(@CookieValue("refreshToken") String refreshToken){
+        String accessToken = refreshTokenScenario.refreshToken(refreshToken);
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + accessToken)
+                .body(RefreshTokenResponse.of(accessToken));
     }
 }

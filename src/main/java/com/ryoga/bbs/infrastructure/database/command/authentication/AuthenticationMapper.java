@@ -11,4 +11,5 @@ public interface AuthenticationMapper {
     RefreshTokenEntity findUserIdAndDeviceId(byte[] userId, byte[] deviceId);
     void revokeRefreshToken(byte[] userId, byte[] deviceId);
     void deleteRefreshToken(byte[] userId, byte[] deviceId);
+    RefreshTokenEntity findByRefreshToken(byte[] refreshToken);
 }

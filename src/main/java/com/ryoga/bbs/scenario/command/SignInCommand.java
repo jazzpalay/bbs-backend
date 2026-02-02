@@ -9,8 +9,9 @@ import lombok.Data;
 public class SignInCommand {
     private String mailAddress;
     private String password;
+    private String deviceId;
 
-    public static SignInCommand toCommand(SignInForm form) {
-        return new SignInCommand(form.getMailAddress(), form.getPassword());
+    public static SignInCommand toCommand(SignInForm form, String deviceId) {
+        return new SignInCommand(form.getMailAddress(), form.getPassword(), deviceId);
     }
 }

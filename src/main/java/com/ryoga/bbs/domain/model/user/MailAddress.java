@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
 public class MailAddress {
-    private String mailAddress;
+    private final String mailAddress;
 
     public MailAddress(String value){
         if(value == null || value.isEmpty()){

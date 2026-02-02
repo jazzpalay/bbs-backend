@@ -1,14 +1,11 @@
 package com.ryoga.bbs.scenario;
 
-import com.ryoga.bbs.domain.authentication.AuthenticationService;
+import com.ryoga.bbs.domain.model.authentication.AuthenticationService;
 import com.ryoga.bbs.domain.model.user.*;
 import com.ryoga.bbs.domain.type.Id;
-import com.ryoga.bbs.scenario.command.SignInCommand;
 import com.ryoga.bbs.scenario.command.SignUpCommand;
 import com.ryoga.bbs.scenario.exception.DuplicateMailAddressScenarioException;
 import com.ryoga.bbs.scenario.exception.DuplicateUserNameScenarioException;
-import com.ryoga.bbs.scenario.exception.UserNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -48,23 +45,5 @@ public class SignUpScenario {
         }
         // ユーザーを保存
         userService.signUp(user);
-    }
-
-    public String signIn(SignInCommand command) {
-
-        MailAddress mailAddress = new MailAddress(command.getMailAddress());
-        // メールアドレスが存在しているか
-        if(!userService.existsByMailAddress(mailAddress)) {
-            throw new UserNotFoundException("メールアドレスまたはパスワードが正しくありません");
-        }
-
-        User user = userService.getUserByMailAddress(mailAddress);
-        // ハッシュパスワードの比較
-        if(!authenticationService.checkPassword(command.getPassword(), user.getHashedPassword().value())) {
-            throw new UserNotFoundException("メールアドレスまたはパスワードが正しくありません");
-        }
-
-        //jwt作成
-        return authenticationService.authenticate(user.getUserId().value());
     }
 }

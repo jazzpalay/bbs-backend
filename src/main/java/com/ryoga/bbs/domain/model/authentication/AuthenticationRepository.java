@@ -9,4 +9,5 @@ public interface AuthenticationRepository {
     boolean findUserIdAndDeviceId(UserId userId, DeviceId deviceId);
     void revokeRefreshToken(UserId userId, DeviceId deviceId);
     void deleteRefreshToken(UserId userId, DeviceId deviceId);
+    RefreshToken findByRefreshToken(String refreshToken);
 }

@@ -26,7 +26,7 @@ public class JwtProvider {
     public String createToken(String userId) {
         Date now = new Date();
         return Jwts.builder()
-                .setSubject(userId)   // 内部IDのみ
+                .setSubject(userId)  // 内部IDのみ
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + expirationMs))
                 .signWith(key, SignatureAlgorithm.HS256)

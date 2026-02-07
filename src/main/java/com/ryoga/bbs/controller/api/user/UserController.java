@@ -6,6 +6,7 @@ import com.ryoga.bbs.controller.api.user.response.RefreshTokenResponse;
 import com.ryoga.bbs.controller.api.user.response.SignInResponse;
 import com.ryoga.bbs.scenario.RefreshTokenScenario;
 import com.ryoga.bbs.scenario.SignInScenario;
+import com.ryoga.bbs.scenario.SignOutScenario;
 import com.ryoga.bbs.scenario.SignUpScenario;
 import com.ryoga.bbs.scenario.command.SignInCommand;
 import com.ryoga.bbs.scenario.command.SignUpCommand;
@@ -26,11 +27,17 @@ public class UserController {
 
     private final SignUpScenario signUpScenario;
     private final SignInScenario signInScenario;
+    private final SignOutScenario signOutScenario;
     private final RefreshTokenScenario refreshTokenScenario;
 
-    public UserController(SignUpScenario signUpScenario, SignInScenario signInScenario, RefreshTokenScenario refreshTokenScenario) {
+    public UserController(SignUpScenario signUpScenario,
+                          SignInScenario signInScenario,
+                          SignOutScenario signOutScenario,
+                          RefreshTokenScenario refreshTokenScenario
+    ) {
         this.signUpScenario = signUpScenario;
         this.signInScenario = signInScenario;
+        this.signOutScenario = signOutScenario;
         this.refreshTokenScenario = refreshTokenScenario;
     }
 
@@ -67,5 +74,23 @@ public class UserController {
         return ResponseEntity.ok()
                 .header("Authorization", "Bearer " + accessToken)
                 .body(RefreshTokenResponse.of(accessToken));
+    }
+
+    @PostMapping("/auth/sign-out")
+    public ResponseEntity<Void> signOut(@CookieValue(value = "refreshToken", required = false) String refreshToken){
+        signOutScenario.signOut(refreshToken);
+
+        ResponseCookie deleteCookie = ResponseCookie
+                .from("refreshToken", "")
+                .path("/api/v1/users/auth")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .maxAge(0)
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, deleteCookie.toString())
+                .build();
     }
 }

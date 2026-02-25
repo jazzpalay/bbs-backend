@@ -28,7 +28,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ← これ追加
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS設定
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().permitAll()
                 );
@@ -43,7 +43,7 @@ public class SecurityConfig {
 
         // 開発中はlocalhost許可
         configuration.setAllowedOriginPatterns(List.of(
-                "http://localhost:5173",
+                "http://localhost:*",
                 "https://*.yourdomain.com"//将来書き換える
         ));
 

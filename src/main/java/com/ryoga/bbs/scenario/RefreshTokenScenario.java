@@ -16,13 +16,17 @@ public class RefreshTokenScenario {
 
     public String refreshToken(String strRefreshToken) {
 
+        if(strRefreshToken == null){
+            throw new UnauthorizedException("サインインしてください。");
+        }
+
         //リフレッシュトークン検索
          RefreshToken refreshToken = authenticationService.findByRefreshToken(strRefreshToken);
 
         //リフレッシュトークンが切れていたら削除
          if(refreshToken.isExpired()){
              authenticationService.deleteRefreshToken(refreshToken.getUserId(), refreshToken.getDeviceId());
-             throw new UnauthorizedException("リフレッシュトークン期限切れです。");
+             throw new UnauthorizedException("サインインしてください。");
          }
 
         return authenticationService.authenticate(refreshToken.getUserId().value());

@@ -31,6 +31,7 @@ dependencies {
 	implementation 'org.flywaydb:flyway-core:10.15.0'
 	implementation 'org.flywaydb:flyway-mysql:10.15.0'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 	// JJWT API
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	// 実装

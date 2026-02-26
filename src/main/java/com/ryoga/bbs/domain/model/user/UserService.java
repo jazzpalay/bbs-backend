@@ -15,6 +15,10 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public User getUserById(UserId userId) { return userRepository.findById(userId); }
+
+    public User getUserByMailAddress(MailAddress mailAddress) { return userRepository.findByMailAddress(mailAddress); }
+
     public boolean existsByUsername(UserName userName) {
         return userRepository.exists(userName);
     }

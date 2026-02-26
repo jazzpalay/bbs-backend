@@ -1,6 +1,8 @@
 package com.ryoga.bbs.controller.error;
 
 import com.ryoga.bbs.scenario.exception.ScenarioAbortException;
+import com.ryoga.bbs.scenario.exception.UnauthorizedException;
+import com.ryoga.bbs.scenario.exception.UserNotFoundException;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +19,15 @@ public class ErrorResponseHandler {
                 .body(new ErrorResponse(exception.getClass().getSimpleName(), exception.getMessage()));
     }
 
-    @ExceptionHandler({AuthenticationException.class})
-    public ResponseEntity<Object> handleAuthentication(AuthenticationException exception) {
+    @ExceptionHandler({UserNotFoundException.class})
+    public ResponseEntity<Object> handleAuthentication(UserNotFoundException exception) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorResponse(exception.getClass().getSimpleName(), exception.getMessage()));
+    }
+
+    @ExceptionHandler({UnauthorizedException.class})
+    public ResponseEntity<Object> handleUnauthorized(UnauthorizedException exception) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(new ErrorResponse(exception.getClass().getSimpleName(), exception.getMessage()));

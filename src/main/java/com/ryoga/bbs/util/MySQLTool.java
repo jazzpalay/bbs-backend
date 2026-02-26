@@ -1,4 +1,4 @@
-package com.ryoga.tools;
+package com.ryoga.bbs.util;
 
 import java.nio.ByteBuffer;
 import java.util.UUID;

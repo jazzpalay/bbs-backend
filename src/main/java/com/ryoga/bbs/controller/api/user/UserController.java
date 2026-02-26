@@ -1,16 +1,12 @@
 package com.ryoga.bbs.controller.api.user;
 
-import com.ryoga.bbs.controller.api.user.Form.SignInForm;
-import com.ryoga.bbs.controller.api.user.Form.SignUpForm;
-import com.ryoga.bbs.scenario.SignUpScenario;
-import com.ryoga.bbs.scenario.command.SignInCommand;
-import com.ryoga.bbs.scenario.command.SignUpCommand;
-import com.ryoga.bbs.scenario.exception.DuplicateMailAddressScenarioException;
-import com.ryoga.bbs.scenario.exception.DuplicateUserNameScenarioException;
-import org.springframework.http.HttpStatus;
+import com.ryoga.bbs.controller.api.user.response.UserResponse;
+import com.ryoga.bbs.domain.model.user.UserId;
+import com.ryoga.bbs.domain.type.Id;
+import com.ryoga.bbs.scenario.UserScenario;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,24 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/users")
 public class UserController {
 
-    private final SignUpScenario signUpScenario;
+    private final UserScenario userScenario;
 
-    public UserController(SignUpScenario signUpScenario) {
-        this.signUpScenario = signUpScenario;
+    public UserController(UserScenario userScenario) {
+        this.userScenario = userScenario;
     }
 
-    @PostMapping("/sign-up")
-    public ResponseEntity<Void> signUp(@RequestBody SignUpForm form) throws DuplicateMailAddressScenarioException, DuplicateUserNameScenarioException {
-        SignUpCommand command = SignUpCommand.toCommand(form);
-        signUpScenario.signUp(command);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getMyUser(Authentication authentication) {
+        UserId userId = new UserId(Id.from(authentication.getName()));
+        return ResponseEntity.ok(UserResponse.of(userScenario.getMyUser(userId)));
     }
-
-    @PostMapping("/sign-in")
-    public ResponseEntity<Void> signIn(@RequestBody SignInForm form) {
-        SignInCommand command = SignInCommand.toCommand(form);
-        signUpScenario.signIn(command);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
 }

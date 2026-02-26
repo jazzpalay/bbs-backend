@@ -31,8 +31,4 @@ public class User {
         this.mailAddress = mailAddress;
         this.hashedPassword = password;
     }
-
-    //public boolean verifyPassword(String password) {
-        //return PasswordEncoder.matches(password, hashedPassword.value());
-    //}
 }

@@ -35,7 +35,7 @@
         FROM refresh_tokens
         WHERE token = #{refreshToken};
     </select>
-    <resultMap id="authenticationMap" type="com.ryoga.bbs.infrastructure.database.command.authentication.RecordEntity.RefreshTokenEntity">
+    <resultMap id="authenticationMap" type="com.ryoga.bbs.infrastructure.database.command.authentication.RecordEntity.RefreshTokenRecordEntity">
         <id property="id" column="id"/>
         <result property="deviceId" column="device_id"/>
         <result property="userId" column="user_id"/>

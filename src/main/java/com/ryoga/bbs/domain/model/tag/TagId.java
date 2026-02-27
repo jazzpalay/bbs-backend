@@ -1,16 +1,15 @@
-package com.ryoga.bbs.domain.model.user;
+package com.ryoga.bbs.domain.model.tag;
 
 import com.ryoga.bbs.domain.type.DomainLogicInvalidException;
 import com.ryoga.bbs.domain.type.Id;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
-public class UserId {
-
+public class TagId {
     private final Id value;
 
-    public UserId(Id id) {
-        if(id == null) {
+    public TagId(Id id){
+        if(id == null){
             throw new DomainLogicInvalidException("ユーザーIDは必須です");
         }
         this.value = id;

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ryoga.bbs.infrastructure.database.command.tag.TagMapper">
+    <select id="findByUserIdAndTagName" resultMap="tagMap">
+        SELECT
+        id,
+        user_id,
+        name,
+        color
+        FROM tags
+        WHERE user_id = #{userId} AND name = #{tagName}
+    </select>
+    <select id="findAllByUserId" resultType="com.ryoga.bbs.infrastructure.database.command.tag.RecordEntity.TagRecordEntity">
+        SELECT
+        id,
+        user_id,
+        name,
+        color
+        FROM tags
+        WHERE user_id = #{userId}
+    </select>
+    <insert id="save">
+        INSERT INTO tags(id, user_id, name, color)
+        VALUES(#{id}, #{userId}, #{tagName}, #{tagColor});
+    </insert>
+    <delete id="delete">
+        DELETE FROM tags WHERE id = #{id};
+    </delete>
+    <resultMap id="tagMap" type="com.ryoga.bbs.infrastructure.database.command.tag.RecordEntity.TagRecordEntity">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="tagName" column="name"/>
+        <result property="tagColor" column="color"/>
+    </resultMap>
+
+</mapper>

@@ -7,7 +7,7 @@ import com.ryoga.bbs.domain.model.authentication.TokenId;
 import com.ryoga.bbs.domain.model.user.UserId;
 import com.ryoga.bbs.domain.type.Id;
 import com.ryoga.bbs.infrastructure.database.DataBaseException;
-import com.ryoga.bbs.infrastructure.database.command.authentication.RecordEntity.RefreshTokenEntity;
+import com.ryoga.bbs.infrastructure.database.command.authentication.RecordEntity.RefreshTokenRecordEntity;
 import com.ryoga.bbs.util.MySQLTool;
 import org.springframework.stereotype.Repository;
 
@@ -24,15 +24,15 @@ public class AuthenticationDataSource implements AuthenticationRepository {
 
     @Override
     public void save(RefreshToken refreshToken) {
-        RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity();
-        refreshTokenEntity.setId(MySQLTool.stringToBytes(refreshToken.getTokenId().value()));
-        refreshTokenEntity.setDeviceId(MySQLTool.stringToBytes(refreshToken.getDeviceId().value()));
-        refreshTokenEntity.setUserId(MySQLTool.stringToBytes(refreshToken.getUserId().value()));
-        refreshTokenEntity.setToken(MySQLTool.stringToBytes(refreshToken.getToken()));
-        refreshTokenEntity.setExpiresAt(refreshToken.getExpiresAt());
-        refreshTokenEntity.setRevoked(refreshToken.isRevoked());
+        RefreshTokenRecordEntity refreshTokenRecordEntity = new RefreshTokenRecordEntity();
+        refreshTokenRecordEntity.setId(MySQLTool.stringToBytes(refreshToken.getTokenId().value()));
+        refreshTokenRecordEntity.setDeviceId(MySQLTool.stringToBytes(refreshToken.getDeviceId().value()));
+        refreshTokenRecordEntity.setUserId(MySQLTool.stringToBytes(refreshToken.getUserId().value()));
+        refreshTokenRecordEntity.setToken(MySQLTool.stringToBytes(refreshToken.getToken()));
+        refreshTokenRecordEntity.setExpiresAt(refreshToken.getExpiresAt());
+        refreshTokenRecordEntity.setRevoked(refreshToken.isRevoked());
 
-        authenticationMapper.save(refreshTokenEntity);
+        authenticationMapper.save(refreshTokenRecordEntity);
     }
 
     @Override
@@ -49,15 +49,15 @@ public class AuthenticationDataSource implements AuthenticationRepository {
 
     @Override
     public RefreshToken findByRefreshToken(String refreshToken) {
-        RefreshTokenEntity refreshTokenEntity = Optional.ofNullable(
+        RefreshTokenRecordEntity refreshTokenRecordEntity = Optional.ofNullable(
                 authenticationMapper.findByRefreshToken(MySQLTool.stringToBytes(refreshToken)))
                 .orElseThrow(() -> new DataBaseException("RefreshTokenが存在しません。"));
         return RefreshToken.issue(
-                new TokenId(Id.from(MySQLTool.bytesToString(refreshTokenEntity.getId()))),
-                new DeviceId(Id.from(MySQLTool.bytesToString(refreshTokenEntity.getDeviceId()))),
-                new UserId(Id.from(MySQLTool.bytesToString(refreshTokenEntity.getUserId()))),
-                MySQLTool.bytesToString(refreshTokenEntity.getToken()),
-                refreshTokenEntity.getExpiresAt()
+                new TokenId(Id.from(MySQLTool.bytesToString(refreshTokenRecordEntity.getId()))),
+                new DeviceId(Id.from(MySQLTool.bytesToString(refreshTokenRecordEntity.getDeviceId()))),
+                new UserId(Id.from(MySQLTool.bytesToString(refreshTokenRecordEntity.getUserId()))),
+                MySQLTool.bytesToString(refreshTokenRecordEntity.getToken()),
+                refreshTokenRecordEntity.getExpiresAt()
         );
     }
 

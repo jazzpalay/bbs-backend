@@ -1,4 +1,4 @@
-package com.ryoga.bbs.scenario.result;
+package com.ryoga.bbs.scenario.auth.result;
 
 public record SignInResult(
         String accessToken,

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class RefreshTokenEntity {
+public class RefreshTokenRecordEntity {
     private byte[] id;
     private byte[] deviceId;
     private byte[] userId;

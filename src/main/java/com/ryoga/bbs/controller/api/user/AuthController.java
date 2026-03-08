@@ -58,7 +58,7 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(false)
                 .sameSite("Lax")
-                .path("/api/v1/users/auth")
+                .path("/api/v1/auth")
                 .maxAge(Duration.ofDays(14))
                 .build();
 
@@ -82,7 +82,7 @@ public class AuthController {
 
         ResponseCookie deleteCookie = ResponseCookie
                 .from("refreshToken", "")
-                .path("/api/v1/users/auth")
+                .path("/api/v1/auth")
                 .httpOnly(true)
                 .secure(false)
                 .sameSite("Lax")

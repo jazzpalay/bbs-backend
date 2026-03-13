@@ -44,6 +44,11 @@ public class UserDataSource implements UserRepository {
     }
 
     @Override
+    public boolean exists(UserId userId) {
+        return Optional.ofNullable(userMapper.findUserById(MySQLTool.stringToBytes(userId.value()))).isPresent();
+    }
+
+    @Override
     public boolean exists(UserName userName) {
         return Optional.ofNullable(userMapper.findUserByUserName(userName.value())).isPresent();
     }

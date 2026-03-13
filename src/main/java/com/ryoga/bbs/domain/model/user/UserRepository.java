@@ -11,6 +11,8 @@ public interface UserRepository {
 
     User findByMailAddress(MailAddress mailAddress);
 
+    boolean exists(UserId userId);
+
     boolean exists(MailAddress mailAddress);
 
     boolean exists(UserName userName);

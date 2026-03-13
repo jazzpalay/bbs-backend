@@ -1,5 +1,6 @@
 package com.ryoga.bbs.domain.model.user;
 
+import com.ryoga.bbs.domain.type.DomainLogicInvalidException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,16 +15,16 @@ public class User {
 
     public User(UserId userId, UserName userName, MailAddress mailAddress, HashedPassword password) {
         if(userId == null) {
-            throw new IllegalArgumentException("ユーザーIDは必須です");
+            throw new DomainLogicInvalidException("ユーザーIDは必須です");
         }
         if(userName == null) {
-            throw new IllegalArgumentException("ユーザー名は必須です");
+            throw new DomainLogicInvalidException("ユーザー名は必須です");
         }
         if(mailAddress == null) {
-            throw new IllegalArgumentException("メールアドレスは必須です");
+            throw new DomainLogicInvalidException("メールアドレスは必須です");
         }
         if (password == null) {
-            throw new IllegalArgumentException("パスワードは必須です");
+            throw new DomainLogicInvalidException("パスワードは必須です");
         }
 
         this.userId = userId;

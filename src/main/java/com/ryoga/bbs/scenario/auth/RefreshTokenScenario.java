@@ -1,4 +1,4 @@
-package com.ryoga.bbs.scenario;
+package com.ryoga.bbs.scenario.auth;
 
 import com.ryoga.bbs.domain.model.authentication.AuthenticationService;
 import com.ryoga.bbs.domain.model.authentication.RefreshToken;

@@ -3,6 +3,7 @@ package com.ryoga.bbs.infrastructure.database.command.tag;
 import com.ryoga.bbs.domain.model.tag.*;
 import com.ryoga.bbs.domain.model.user.UserId;
 import com.ryoga.bbs.domain.type.Id;
+import com.ryoga.bbs.infrastructure.database.command.log.LogTagsMapper;
 import com.ryoga.bbs.infrastructure.database.command.tag.RecordEntity.TagRecordEntity;
 import com.ryoga.bbs.util.MySQLTool;
 import org.springframework.stereotype.Repository;
@@ -62,9 +63,9 @@ public class TagDataSource implements TagRepository {
     }
 
     @Override
-    public TagList findAllByUserId(UserId userId){
+    public UserTagList findAllByUserId(UserId userId){
         List<TagRecordEntity> list = tagMapper.findAllByUserId(MySQLTool.stringToBytes(userId.value()));
-        return new TagList(
+        return new UserTagList(
                 userId,
                 list.stream().map(entity ->
                 new Tag(

@@ -32,7 +32,7 @@ public class TagService {
         return tagRepository.existsTag(tagId);
     }
 
-    public TagList findAllByUserId(UserId userId) {
+    public UserTagList findAllByUserId(UserId userId) {
         return tagRepository.findAllByUserId(userId);
     }
 }

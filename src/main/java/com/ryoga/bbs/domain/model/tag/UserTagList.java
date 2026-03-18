@@ -6,12 +6,12 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class TagList {
+public class UserTagList {
 
     private final UserId userId;
     private final List<Tag> tags;
 
-    public TagList(UserId userId, List<Tag> tags){
+    public UserTagList(UserId userId, List<Tag> tags){
         this.userId = userId;
         this.tags = tags;
     }

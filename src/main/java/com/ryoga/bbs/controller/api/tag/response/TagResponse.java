@@ -1,4 +1,4 @@
-package com.ryoga.bbs.controller.api.tag.temp;
+package com.ryoga.bbs.controller.api.tag.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

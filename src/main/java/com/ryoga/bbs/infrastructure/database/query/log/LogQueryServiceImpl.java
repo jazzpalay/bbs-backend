@@ -1,7 +1,7 @@
 package com.ryoga.bbs.infrastructure.database.query.log;
 
 import com.ryoga.bbs.controller.api.log.response.LogResponse;
-import com.ryoga.bbs.controller.api.tag.temp.TagResponse;
+import com.ryoga.bbs.controller.api.tag.response.TagResponse;
 import com.ryoga.bbs.infrastructure.database.command.log.RecordEntity.LogListRecordEntity;
 import com.ryoga.bbs.scenario.log.queryService.LogQueryService;
 import com.ryoga.bbs.controller.api.log.response.LogListResponse;

@@ -1,6 +1,6 @@
 package com.ryoga.bbs.controller.api.tag;
 
-import com.ryoga.bbs.controller.api.tag.temp.TagListResponse;
+import com.ryoga.bbs.controller.api.tag.response.TagListResponse;
 import com.ryoga.bbs.domain.model.tag.TagId;
 import com.ryoga.bbs.domain.model.tag.UserTagList;
 import com.ryoga.bbs.domain.model.user.UserId;

@@ -1,6 +1,6 @@
 package com.ryoga.bbs.controller.api.log.response;
 
-import com.ryoga.bbs.controller.api.tag.temp.TagResponse;
+import com.ryoga.bbs.controller.api.tag.response.TagResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

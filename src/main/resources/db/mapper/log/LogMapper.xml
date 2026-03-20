@@ -7,7 +7,34 @@
         INSERT INTO logs(id, user_id, title, content, log_date)
         VALUES(#{id}, #{userId}, #{title}, #{content}, #{logDate})
     </insert>
+    <update id="update">
+        UPDATE logs
+        SET title = #{title}, content = #{content}, log_date = #{logDate}
+        WHERE id = #{id} AND user_id = #{userId};
+    </update>
+    <delete id="delete">
+        DELETE FROM logs WHERE id = #{logId} AND user_id = #{userId};
+    </delete>
     <select id="findAllLog" resultMap="logListResultMap">
+        SELECT
+        l.user_id,
+        l.id        AS log_id,
+        l.user_id   AS log_user_id,
+        l.title,
+        l.log_date,
+
+        t.id        AS tag_id,
+        t.user_id   AS tag_user_id,
+        t.name      AS tag_name,
+        t.color     AS tag_color
+
+        FROM logs l
+        LEFT JOIN log_tags lt ON l.id = lt.log_id
+        LEFT JOIN tags t ON lt.tag_id = t.id
+        WHERE l.user_id = #{userId}
+        ORDER BY l.log_date DESC, l.created_at DESC;
+    </select>
+    <select id="findLog" resultMap="logResultMap">
         SELECT
         l.user_id,
         l.id        AS log_id,
@@ -24,7 +51,7 @@
         FROM logs l
         LEFT JOIN log_tags lt ON l.id = lt.log_id
         LEFT JOIN tags t ON lt.tag_id = t.id
-        WHERE l.user_id = #{userId}
+        WHERE l.user_id = #{userId} AND l.id = #{logId}
     </select>
 
     <resultMap id="tagResultMap" type="com.ryoga.bbs.infrastructure.database.command.tag.RecordEntity.TagRecordEntity">

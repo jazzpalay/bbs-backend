@@ -10,4 +10,7 @@
             (#{logId}, #{tagId})
         </foreach>
     </insert>
+    <delete id="delete">
+        DELETE FROM log_tags WHERE log_id = #{logId};
+    </delete>
 </mapper>

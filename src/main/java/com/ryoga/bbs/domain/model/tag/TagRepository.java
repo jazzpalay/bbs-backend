@@ -10,5 +10,5 @@ public interface TagRepository {
     void delete(TagId tagId);
     boolean existsName(UserId userId, TagName tagName);
     boolean existsTag(TagId tagId);
-    TagList findAllByUserId(UserId userId);
+    UserTagList findAllByUserId(UserId userId);
 }

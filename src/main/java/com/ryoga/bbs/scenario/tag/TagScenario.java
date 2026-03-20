@@ -41,7 +41,7 @@ public class TagScenario {
         tagService.createTag(tag);
     }
 
-    public TagList findAllByUserId(UserId userId) {
+    public UserTagList findAllByUserId(UserId userId) {
 
         if(!userService.existsById(userId)) {
             throw new UserNotFoundException("指定のユーザーは存在しません。");

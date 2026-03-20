@@ -1,6 +1,6 @@
-package com.ryoga.bbs.controller.api.tag.Response;
+package com.ryoga.bbs.controller.api.tag.response;
 
-import com.ryoga.bbs.domain.model.tag.TagList;
+import com.ryoga.bbs.domain.model.tag.UserTagList;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -13,7 +13,7 @@ public class TagListResponse {
     private String userId;
     private List<TagResponse> list;
 
-    public static TagListResponse toResponse(TagList list){
+    public static TagListResponse toResponse(UserTagList list){
         return new TagListResponse(
                 list.getUserId().value(),
                 list.getTags().stream().map(

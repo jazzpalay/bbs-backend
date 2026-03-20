@@ -1,8 +1,8 @@
 package com.ryoga.bbs.controller.api.tag;
 
-import com.ryoga.bbs.controller.api.tag.Response.TagListResponse;
+import com.ryoga.bbs.controller.api.tag.response.TagListResponse;
 import com.ryoga.bbs.domain.model.tag.TagId;
-import com.ryoga.bbs.domain.model.tag.TagList;
+import com.ryoga.bbs.domain.model.tag.UserTagList;
 import com.ryoga.bbs.domain.model.user.UserId;
 import com.ryoga.bbs.domain.type.Id;
 import com.ryoga.bbs.scenario.tag.TagScenario;
@@ -34,8 +34,8 @@ public class TagController {
     @GetMapping("/all")
     public ResponseEntity<TagListResponse> findAllByUserId(Authentication authentication) {
         String userId = authentication.getName();
-        TagList tagList = tagScenario.findAllByUserId(new UserId(Id.from(userId)));
-        return new ResponseEntity<>(TagListResponse.toResponse(tagList), HttpStatus.OK);
+        UserTagList userTagList = tagScenario.findAllByUserId(new UserId(Id.from(userId)));
+        return new ResponseEntity<>(TagListResponse.toResponse(userTagList), HttpStatus.OK);
     }
 
     @PutMapping("/{tagId}")

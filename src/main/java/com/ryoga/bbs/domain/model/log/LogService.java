@@ -14,9 +14,26 @@ public class LogService {
     }
 
     public void saveLog(Log log, LogTagIds tagIds){
-        logRepository.save(log);
+        logRepository.saveLog(log);
         if(!tagIds.isTagEmpty()){
-            logRepository.save(tagIds);
+            logRepository.saveLogTags(tagIds);
         }
+    }
+
+    public void updateLog(Log log, LogTagIds tagIds) {
+        logRepository.update(log);
+
+        logRepository.deleteLogTags(log.getId());
+        if(!tagIds.isTagEmpty()){
+            logRepository.saveLogTags(tagIds);
+        }
+    }
+
+    public void deleteLog(LogId logId, UserId userId) {
+        logRepository.deleteLog(logId, userId);
+    }
+
+    public boolean existsById(LogId logId, UserId userId) {
+        return logRepository.existsById(logId, userId);
     }
 }

@@ -6,6 +6,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LogRepository {
-    void save(Log log);
-    void save(LogTagIds list);
+    void saveLog(Log log);
+    void saveLogTags(LogTagIds list);
+    void update(Log log);
+    void deleteLog(LogId logId, UserId userId);
+    void deleteLogTags(LogId logId);
+    boolean existsById(LogId logId, UserId userId);
 }

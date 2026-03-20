@@ -8,4 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface LogMapper {
     void save(LogRecordEntity entity);
     LogListRecordEntity findAllLog(byte[] userId);
+    LogRecordEntity findLog(byte[] logId, byte[] userId);
+    void update(LogRecordEntity entity);
+    void delete(byte[] logId, byte[] userId);
 }

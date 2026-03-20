@@ -8,5 +8,6 @@ import java.util.List;
 @Mapper
 public interface LogTagsMapper {
     void save(LogTagsRecordEntity entity);
+    void delete(byte[] logId);
 
 }

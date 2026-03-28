@@ -14,5 +14,5 @@ public class LogResponse {
     private String title;
     private String content;
     private String logDate;
-    private List<TagResponse> list;
+    private List<TagResponse> tags;
 }

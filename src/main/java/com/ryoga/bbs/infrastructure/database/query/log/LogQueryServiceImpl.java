@@ -34,7 +34,7 @@ public class LogQueryServiceImpl implements LogQueryService {
                             response.setLogId(MySQLTool.bytesToString(log.getId()));
                             response.setTitle(log.getTitle());
                             response.setLogDate(log.getLogDate().toString());
-                            response.setList(
+                            response.setTags(
                                     log.getTagList()
                                             .stream()
                                             .map(tag ->
@@ -60,7 +60,7 @@ public class LogQueryServiceImpl implements LogQueryService {
         response.setTitle(entity.getTitle());
         response.setContent(entity.getContent());
         response.setLogDate(entity.getLogDate().toString());
-        response.setList(
+        response.setTags(
                 entity.getTagList()
                         .stream()
                         .map(tag ->
@@ -73,6 +73,4 @@ public class LogQueryServiceImpl implements LogQueryService {
         );
         return response;
     }
-
-
 }

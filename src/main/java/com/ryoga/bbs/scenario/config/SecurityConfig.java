@@ -29,6 +29,9 @@ public class SecurityConfig {
     @Value("${jwt.secret}")
     private String secret;
 
+    @Value("${app.cors.allowed-origins}")
+    private String allowedOrigins;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -47,7 +50,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(Customizer.withDefaults())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS設定
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll() //auth系はアクセストークン必要なし
@@ -64,10 +67,9 @@ public class SecurityConfig {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // 開発中はlocalhost許可
+        // 許可オリジン
         configuration.setAllowedOriginPatterns(List.of(
-                "http://localhost:*",
-                "https://*.yourdomain.com"//将来書き換える
+                allowedOrigins
         ));
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));

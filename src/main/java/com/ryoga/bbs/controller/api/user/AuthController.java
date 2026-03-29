@@ -13,6 +13,7 @@ import com.ryoga.bbs.scenario.auth.command.SignUpCommand;
 import com.ryoga.bbs.scenario.exception.DuplicateMailAddressScenarioException;
 import com.ryoga.bbs.scenario.exception.DuplicateUserNameScenarioException;
 import com.ryoga.bbs.scenario.auth.result.SignInResult;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -29,6 +30,12 @@ public class AuthController {
     private final SignInScenario signInScenario;
     private final SignOutScenario signOutScenario;
     private final RefreshTokenScenario refreshTokenScenario;
+    @Value("${app.cookie.http-only}")
+    private boolean httpOnly;
+    @Value("${app.cookie.secure}")
+    private boolean secure;
+    @Value("${app.cookie.same-site}")
+    private String sameSite;
 
     public AuthController(SignUpScenario signUpScenario,
                           SignInScenario signInScenario,
@@ -55,9 +62,9 @@ public class AuthController {
 
         ResponseCookie responseCookie = ResponseCookie
                 .from("refreshToken", signInResult.refreshToken())
-                .httpOnly(true)
-                .secure(false)
-                .sameSite("Lax")
+                .httpOnly(httpOnly)
+                .secure(secure)
+                .sameSite(sameSite)
                 .path("/api/v1/auth")
                 .maxAge(Duration.ofDays(14))
                 .build();
@@ -83,9 +90,9 @@ public class AuthController {
         ResponseCookie deleteCookie = ResponseCookie
                 .from("refreshToken", "")
                 .path("/api/v1/auth")
-                .httpOnly(true)
-                .secure(false)
-                .sameSite("Lax")
+                .httpOnly(httpOnly)
+                .secure(secure)
+                .sameSite(sameSite)
                 .maxAge(0)
                 .build();
 

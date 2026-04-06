@@ -10,9 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 public class LogResponse {
     private String logId;
-    private String userId;
     private String title;
-    private String content;
     private String logDate;
     private List<TagResponse> tags;
 }

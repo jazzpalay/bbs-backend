@@ -1,5 +1,6 @@
 package com.ryoga.bbs.infrastructure.database.query.log;
 
+import com.ryoga.bbs.controller.api.log.response.LogDetailResponse;
 import com.ryoga.bbs.controller.api.log.response.LogResponse;
 import com.ryoga.bbs.controller.api.tag.response.TagResponse;
 import com.ryoga.bbs.infrastructure.database.command.log.RecordEntity.LogListRecordEntity;
@@ -10,6 +11,7 @@ import com.ryoga.bbs.infrastructure.database.command.log.LogMapper;
 import com.ryoga.bbs.util.MySQLTool;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +26,13 @@ public class LogQueryServiceImpl implements LogQueryService {
     @Override
     public LogListResponse getLogList(String userId) {
         LogListRecordEntity entity = logMapper.findAllLog(MySQLTool.stringToBytes(userId));
+
+        if (entity == null) {
+            return new LogListResponse(
+                    userId,
+                    Collections.emptyList()
+            );
+        }
 
         return new LogListResponse(
                 MySQLTool.bytesToString(entity.getUserId()),
@@ -51,10 +60,10 @@ public class LogQueryServiceImpl implements LogQueryService {
     }
 
     @Override
-    public LogResponse getLog(String logId, String userId) {
+    public LogDetailResponse getLog(String logId, String userId) {
         LogRecordEntity entity = logMapper.findLog(MySQLTool.stringToBytes(logId), MySQLTool.stringToBytes(userId));
 
-        LogResponse response = new LogResponse();
+        LogDetailResponse response = new LogDetailResponse();
         response.setLogId(MySQLTool.bytesToString(entity.getId()));
         response.setUserId(MySQLTool.bytesToString(entity.getUserId()));
         response.setTitle(entity.getTitle());

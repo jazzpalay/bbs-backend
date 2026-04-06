@@ -1,5 +1,6 @@
 package com.ryoga.bbs.scenario.log;
 
+import com.ryoga.bbs.controller.api.log.response.LogDetailResponse;
 import com.ryoga.bbs.controller.api.log.response.LogListResponse;
 import com.ryoga.bbs.controller.api.log.response.LogResponse;
 import com.ryoga.bbs.domain.model.log.*;
@@ -65,7 +66,7 @@ public class LogScenario {
         return logQueryService.getLogList(userId.value());
     }
 
-    public LogResponse getLog(UserId userId, LogId logId) {
+    public LogDetailResponse getLog(UserId userId, LogId logId) {
         if(!userService.existsById(userId)) {
             throw new UserNotFoundException("指定のユーザーは存在しません。");
         }

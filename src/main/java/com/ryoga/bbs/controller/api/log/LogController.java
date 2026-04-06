@@ -1,6 +1,7 @@
 package com.ryoga.bbs.controller.api.log;
 
 import com.ryoga.bbs.controller.api.log.form.LogForm;
+import com.ryoga.bbs.controller.api.log.response.LogDetailResponse;
 import com.ryoga.bbs.controller.api.log.response.LogListResponse;
 import com.ryoga.bbs.controller.api.log.response.LogResponse;
 import com.ryoga.bbs.domain.model.log.LogId;
@@ -39,10 +40,10 @@ public class LogController {
     }
 
     @GetMapping("/{logId}")
-    public ResponseEntity<LogResponse> getLog(Authentication authentication, @PathVariable String logId) {
+    public ResponseEntity<LogDetailResponse> getLog(Authentication authentication, @PathVariable String logId) {
         String userId = authentication.getName();
-        LogResponse logResponse = logScenario.getLog(new UserId(Id.from(userId)), new LogId(Id.from(logId)));
-        return new ResponseEntity<>(logResponse, HttpStatus.OK);
+        LogDetailResponse logDetailResponse = logScenario.getLog(new UserId(Id.from(userId)), new LogId(Id.from(logId)));
+        return new ResponseEntity<>(logDetailResponse, HttpStatus.OK);
     }
 
     @PutMapping("/{logId}")

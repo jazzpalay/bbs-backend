@@ -1,5 +1,7 @@
 package com.ryoga.bbs.scenario.config;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +15,8 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -33,12 +37,6 @@ public class SecurityConfig {
 
     @Value("${app.cors.allowed-origins}")
     private String allowedOrigins;
-
-    @Value("${app.cookie.secure}")
-    private boolean secure;
-
-    @Value("${app.cookie.same-site}")
-    private String sameSite;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -62,12 +60,7 @@ public class SecurityConfig {
         requestHandler.setCsrfRequestAttributeName(null);
 
         // CSRF Cookieの設定をカスタマイズ
-        CookieCsrfTokenRepository tokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
-        tokenRepository.setCookieCustomizer(customizer -> customizer
-                .sameSite(sameSite)
-                .secure(secure)
-                .path("/")
-        );
+        CookieCsrfTokenRepository tokenRepository = new CookieCsrfTokenRepository();
 
         http
                 .csrf(csrf -> csrf
@@ -85,7 +78,15 @@ public class SecurityConfig {
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(Customizer.withDefaults())
-                );
+                )
+                .addFilterAfter((request, response, chain) -> {
+                    CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+                    if (csrfToken != null) {
+                        HttpServletResponse res = (HttpServletResponse) response;
+                        res.setHeader("X-XSRF-TOKEN", csrfToken.getToken());
+                    }
+                    chain.doFilter(request, response);
+                }, CsrfFilter.class);
 
         return http.build();
     }
@@ -103,6 +104,8 @@ public class SecurityConfig {
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
+
+        configuration.setExposedHeaders(List.of("X-XSRF-TOKEN"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

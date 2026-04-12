@@ -1,0 +1,59 @@
+name: CI/CD via SSM
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-northeast-1
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: 'gradle'
+
+    - name: Build with Gradle
+      run: |
+        chmod +x gradlew
+        ./gradlew bootJar
+
+    - name: Build and Push to ECR
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: ${{ secrets.ECR_NAME }}
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+    - name: Execute Deploy Command via SSM
+      run: |
+        aws ssm send-command \
+          --instance-ids "${{ secrets.EC2_INSTANCE_ID }}" \
+          --document-name "AWS-RunShellScript" \
+          --comment "Deploy latest docker image" \
+          --parameters 'commands=[
+            "export HOME=/home/ec2-user",
+            "cd /home/ec2-user/<プロジェクトのパス>", # docker-compose.ymlがあるディレクトリ
+            "aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}",
+            "docker-compose pull",
+            "docker-compose up -d --remove-orphans",
+            "docker-image prune -f"
+          ]'

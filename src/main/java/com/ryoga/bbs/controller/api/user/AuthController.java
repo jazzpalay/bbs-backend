@@ -18,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
@@ -87,9 +88,18 @@ public class AuthController {
     public ResponseEntity<Void> signOut(@CookieValue(value = "refreshToken", required = false) String refreshToken){
         signOutScenario.signOut(refreshToken);
 
-        ResponseCookie deleteCookie = ResponseCookie
+        ResponseCookie deleteRefreshCookie = ResponseCookie
                 .from("refreshToken", "")
-                .path("/api/v1/auth")
+                .path("/")
+                .httpOnly(httpOnly)
+                .secure(secure)
+                .sameSite(sameSite)
+                .maxAge(0)
+                .build();
+
+        ResponseCookie deleteCsrfCookie = ResponseCookie
+                .from("XSRF-TOKEN", "")
+                .path("/")
                 .httpOnly(httpOnly)
                 .secure(secure)
                 .sameSite(sameSite)
@@ -97,7 +107,12 @@ public class AuthController {
                 .build();
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, deleteCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, deleteRefreshCookie.toString(), deleteCsrfCookie.toString())
                 .build();
+    }
+
+    @GetMapping("/csrf")
+    public ResponseEntity<String> csrf(CsrfToken token) {
+        return ResponseEntity.ok(token.getToken());
     }
 }

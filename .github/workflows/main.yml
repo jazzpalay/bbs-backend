@@ -51,7 +51,7 @@ jobs:
           --comment "Deploy latest docker image" \
           --parameters 'commands=[
             "export HOME=/home/ec2-user",
-            "cd /usr/bin/app"
+            "cd /usr/bin/app",
             "aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}",
             "docker-compose pull",
             "docker-compose up -d --remove-orphans",

@@ -4,19 +4,21 @@ import com.ryoga.bbs.controller.api.user.form.SignInForm;
 import com.ryoga.bbs.controller.api.user.form.SignUpForm;
 import com.ryoga.bbs.controller.api.user.response.RefreshTokenResponse;
 import com.ryoga.bbs.controller.api.user.response.SignInResponse;
-import com.ryoga.bbs.scenario.RefreshTokenScenario;
-import com.ryoga.bbs.scenario.SignInScenario;
-import com.ryoga.bbs.scenario.SignOutScenario;
-import com.ryoga.bbs.scenario.SignUpScenario;
-import com.ryoga.bbs.scenario.command.SignInCommand;
-import com.ryoga.bbs.scenario.command.SignUpCommand;
+import com.ryoga.bbs.scenario.auth.RefreshTokenScenario;
+import com.ryoga.bbs.scenario.auth.SignInScenario;
+import com.ryoga.bbs.scenario.auth.SignOutScenario;
+import com.ryoga.bbs.scenario.auth.SignUpScenario;
+import com.ryoga.bbs.scenario.auth.command.SignInCommand;
+import com.ryoga.bbs.scenario.auth.command.SignUpCommand;
 import com.ryoga.bbs.scenario.exception.DuplicateMailAddressScenarioException;
 import com.ryoga.bbs.scenario.exception.DuplicateUserNameScenarioException;
-import com.ryoga.bbs.scenario.result.SignInResult;
+import com.ryoga.bbs.scenario.auth.result.SignInResult;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
@@ -29,6 +31,12 @@ public class AuthController {
     private final SignInScenario signInScenario;
     private final SignOutScenario signOutScenario;
     private final RefreshTokenScenario refreshTokenScenario;
+    @Value("${app.cookie.http-only}")
+    private boolean httpOnly;
+    @Value("${app.cookie.secure}")
+    private boolean secure;
+    @Value("${app.cookie.same-site}")
+    private String sameSite;
 
     public AuthController(SignUpScenario signUpScenario,
                           SignInScenario signInScenario,
@@ -55,10 +63,10 @@ public class AuthController {
 
         ResponseCookie responseCookie = ResponseCookie
                 .from("refreshToken", signInResult.refreshToken())
-                .httpOnly(true)
-                .secure(false)
-                .sameSite("Lax")
-                .path("/api/v1/users/auth")
+                .httpOnly(httpOnly)
+                .secure(secure)
+                .sameSite(sameSite)
+                .path("/api/v1/auth")
                 .maxAge(Duration.ofDays(14))
                 .build();
 
@@ -80,17 +88,31 @@ public class AuthController {
     public ResponseEntity<Void> signOut(@CookieValue(value = "refreshToken", required = false) String refreshToken){
         signOutScenario.signOut(refreshToken);
 
-        ResponseCookie deleteCookie = ResponseCookie
+        ResponseCookie deleteRefreshCookie = ResponseCookie
                 .from("refreshToken", "")
-                .path("/api/v1/users/auth")
-                .httpOnly(true)
-                .secure(false)
-                .sameSite("Lax")
+                .path("/")
+                .httpOnly(httpOnly)
+                .secure(secure)
+                .sameSite(sameSite)
+                .maxAge(0)
+                .build();
+
+        ResponseCookie deleteCsrfCookie = ResponseCookie
+                .from("XSRF-TOKEN", "")
+                .path("/")
+                .httpOnly(httpOnly)
+                .secure(secure)
+                .sameSite(sameSite)
                 .maxAge(0)
                 .build();
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, deleteCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, deleteRefreshCookie.toString(), deleteCsrfCookie.toString())
                 .build();
+    }
+
+    @GetMapping("/csrf")
+    public ResponseEntity<String> csrf(CsrfToken token) {
+        return ResponseEntity.ok(token.getToken());
     }
 }

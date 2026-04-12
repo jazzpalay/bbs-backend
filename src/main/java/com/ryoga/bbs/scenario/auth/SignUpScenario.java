@@ -1,9 +1,9 @@
-package com.ryoga.bbs.scenario;
+package com.ryoga.bbs.scenario.auth;
 
 import com.ryoga.bbs.domain.model.authentication.AuthenticationService;
 import com.ryoga.bbs.domain.model.user.*;
 import com.ryoga.bbs.domain.type.Id;
-import com.ryoga.bbs.scenario.command.SignUpCommand;
+import com.ryoga.bbs.scenario.auth.command.SignUpCommand;
 import com.ryoga.bbs.scenario.exception.DuplicateMailAddressScenarioException;
 import com.ryoga.bbs.scenario.exception.DuplicateUserNameScenarioException;
 import org.springframework.stereotype.Service;

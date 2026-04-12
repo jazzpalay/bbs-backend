@@ -1,4 +1,4 @@
-package com.ryoga.bbs.scenario;
+package com.ryoga.bbs.scenario.auth;
 
 import com.ryoga.bbs.domain.model.authentication.AuthenticationService;
 import com.ryoga.bbs.domain.model.authentication.DeviceId;
@@ -7,9 +7,9 @@ import com.ryoga.bbs.domain.model.user.MailAddress;
 import com.ryoga.bbs.domain.model.user.User;
 import com.ryoga.bbs.domain.model.user.UserService;
 import com.ryoga.bbs.domain.type.Id;
-import com.ryoga.bbs.scenario.command.SignInCommand;
+import com.ryoga.bbs.scenario.auth.command.SignInCommand;
 import com.ryoga.bbs.scenario.exception.UserNotFoundException;
-import com.ryoga.bbs.scenario.result.SignInResult;
+import com.ryoga.bbs.scenario.auth.result.SignInResult;
 import org.springframework.stereotype.Service;
 
 @Service

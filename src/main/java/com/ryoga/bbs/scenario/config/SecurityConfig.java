@@ -34,6 +34,12 @@ public class SecurityConfig {
     @Value("${app.cors.allowed-origins}")
     private String allowedOrigins;
 
+    @Value("${app.cookie.secure}")
+    private boolean secure;
+
+    @Value("${app.cookie.same-site}")
+    private String sameSite;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -55,9 +61,17 @@ public class SecurityConfig {
         CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
         requestHandler.setCsrfRequestAttributeName(null);
 
+        // CSRF Cookieの設定をカスタマイズ
+        CookieCsrfTokenRepository tokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
+        tokenRepository.setCookieCustomizer(customizer -> customizer
+                .sameSite(sameSite)
+                .secure(secure)
+                .path("/")
+        );
+
         http
                 .csrf(csrf -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRepository(tokenRepository)
                         .csrfTokenRequestHandler(requestHandler) // これでCSRFチェックが強制される
                         .ignoringRequestMatchers(
                                 "/api/v1/auth/sign-in", "/api/v1/auth/sign-up",

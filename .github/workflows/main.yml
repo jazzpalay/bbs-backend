@@ -3,6 +3,7 @@ name: CI/CD via SSM (OIDC)
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
 
 # OIDCトークンの発行とリポジトリ読み取りの権限を追加
 permissions:

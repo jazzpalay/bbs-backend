@@ -3,6 +3,7 @@ package com.ryoga.bbs.scenario.auth;
 import com.ryoga.bbs.domain.model.authentication.AuthenticationService;
 import com.ryoga.bbs.domain.model.authentication.RefreshToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SignOutScenario {
@@ -12,6 +13,7 @@ public class SignOutScenario {
         this.authenticationService = authenticationService;
     }
 
+    @Transactional
     public void signOut(String strRefreshToken){
         if(strRefreshToken != null) {
             //リフレッシュトークン検索

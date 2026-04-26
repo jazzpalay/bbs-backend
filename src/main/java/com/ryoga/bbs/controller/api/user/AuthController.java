@@ -13,6 +13,7 @@ import com.ryoga.bbs.scenario.auth.command.SignUpCommand;
 import com.ryoga.bbs.scenario.exception.DuplicateMailAddressScenarioException;
 import com.ryoga.bbs.scenario.exception.DuplicateUserNameScenarioException;
 import com.ryoga.bbs.scenario.auth.result.SignInResult;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -50,14 +51,14 @@ public class AuthController {
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<Void> signUp(@RequestBody SignUpForm form) throws DuplicateMailAddressScenarioException, DuplicateUserNameScenarioException {
+    public ResponseEntity<Void> signUp(@RequestBody @Valid SignUpForm form) throws DuplicateMailAddressScenarioException, DuplicateUserNameScenarioException {
         SignUpCommand command = SignUpCommand.toCommand(form);
         signUpScenario.signUp(command);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<SignInResponse> signIn(@RequestHeader("X-Device-Id") String deviceId, @RequestBody SignInForm form) {
+    public ResponseEntity<SignInResponse> signIn(@RequestHeader("X-Device-Id") String deviceId, @RequestBody @Valid SignInForm form) {
         SignInCommand command = SignInCommand.toCommand(form, deviceId);
         SignInResult signInResult = signInScenario.signIn(command);
 

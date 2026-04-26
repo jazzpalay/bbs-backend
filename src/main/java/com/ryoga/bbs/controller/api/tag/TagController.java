@@ -8,6 +8,7 @@ import com.ryoga.bbs.domain.type.Id;
 import com.ryoga.bbs.scenario.tag.TagScenario;
 import com.ryoga.bbs.scenario.tag.command.TagCommand;
 import com.ryoga.bbs.controller.api.tag.form.TagForm;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -24,7 +25,7 @@ public class TagController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Void> createTag(Authentication authentication, @RequestBody TagForm tagForm) {
+    public ResponseEntity<Void> createTag(Authentication authentication, @RequestBody @Valid TagForm tagForm) {
         String userId = authentication.getName();
         TagCommand command = TagCommand.toCommand(tagForm,userId);
         tagScenario.createTag(command);
@@ -39,7 +40,7 @@ public class TagController {
     }
 
     @PutMapping("/{tagId}")
-    public ResponseEntity<TagListResponse> updateTag(Authentication authentication, @PathVariable String tagId, @RequestBody TagForm tagForm) {
+    public ResponseEntity<TagListResponse> updateTag(Authentication authentication, @PathVariable String tagId, @RequestBody @Valid TagForm tagForm) {
         String userId = authentication.getName();
         tagScenario.updateTag(TagCommand.toCommand(tagForm,userId), new TagId(Id.from(tagId)));
         return new ResponseEntity<>(HttpStatus.OK);

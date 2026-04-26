@@ -7,6 +7,7 @@ import com.ryoga.bbs.scenario.auth.command.SignUpCommand;
 import com.ryoga.bbs.scenario.exception.DuplicateMailAddressScenarioException;
 import com.ryoga.bbs.scenario.exception.DuplicateUserNameScenarioException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SignUpScenario {
@@ -20,6 +21,7 @@ public class SignUpScenario {
         this.userService = userService;
     }
 
+    @Transactional
     public void signUp(SignUpCommand command) throws DuplicateUserNameScenarioException, DuplicateMailAddressScenarioException {
         // ユーザーIDを生成
         UserId userId = new UserId(Id.generate());

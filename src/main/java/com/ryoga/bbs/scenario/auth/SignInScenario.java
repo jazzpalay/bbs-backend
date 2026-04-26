@@ -11,6 +11,7 @@ import com.ryoga.bbs.scenario.auth.command.SignInCommand;
 import com.ryoga.bbs.scenario.exception.UserNotFoundException;
 import com.ryoga.bbs.scenario.auth.result.SignInResult;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SignInScenario {
@@ -24,6 +25,7 @@ public class SignInScenario {
         this.userService = userService;
     }
 
+    @Transactional
     public SignInResult signIn(SignInCommand command) {
 
         DeviceId deviceId = new DeviceId(Id.from(command.getDeviceId()));

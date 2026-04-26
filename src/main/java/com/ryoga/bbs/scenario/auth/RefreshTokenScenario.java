@@ -4,6 +4,7 @@ import com.ryoga.bbs.domain.model.authentication.AuthenticationService;
 import com.ryoga.bbs.domain.model.authentication.RefreshToken;
 import com.ryoga.bbs.scenario.exception.UnauthorizedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RefreshTokenScenario {
@@ -14,6 +15,7 @@ public class RefreshTokenScenario {
         this.authenticationService = authenticationService;
     }
 
+    @Transactional
     public String refreshToken(String strRefreshToken) {
 
         if(strRefreshToken == null){

@@ -9,6 +9,7 @@ import com.ryoga.bbs.domain.model.user.UserId;
 import com.ryoga.bbs.domain.type.Id;
 import com.ryoga.bbs.scenario.log.LogScenario;
 import com.ryoga.bbs.scenario.log.command.LogCommand;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -24,7 +25,7 @@ public class LogController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Void> createLog(Authentication authentication, @RequestBody LogForm logForm) {
+    public ResponseEntity<Void> createLog(Authentication authentication, @RequestBody @Valid LogForm logForm) {
         String userId = authentication.getName();
         LogCommand command = LogCommand.toCreateCommand(logForm, userId);
         logScenario.createLog(command);
@@ -47,7 +48,7 @@ public class LogController {
     }
 
     @PutMapping("/{logId}")
-    public ResponseEntity<Void> updateLog(Authentication authentication, @PathVariable String logId, @RequestBody LogForm logForm){
+    public ResponseEntity<Void> updateLog(Authentication authentication, @PathVariable String logId, @RequestBody @Valid LogForm logForm){
         String userId = authentication.getName();
         LogCommand command = LogCommand.toUpdateCommand(logForm, logId, userId);
         logScenario.updateLog(command);

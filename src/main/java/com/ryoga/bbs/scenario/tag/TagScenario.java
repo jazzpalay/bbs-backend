@@ -8,6 +8,7 @@ import com.ryoga.bbs.scenario.exception.DuplicateTagNameScenarioException;
 import com.ryoga.bbs.scenario.exception.UserNotFoundException;
 import com.ryoga.bbs.scenario.tag.command.TagCommand;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TagScenario {
@@ -19,6 +20,7 @@ public class TagScenario {
         this.userService = userService;
     }
 
+    @Transactional
     public void createTag(TagCommand tagCommand) {
 
         UserId userId = new UserId(Id.from(tagCommand.getUserId()));
@@ -50,6 +52,7 @@ public class TagScenario {
         return tagService.findAllByUserId(userId);
     }
 
+    @Transactional
     public void updateTag(TagCommand tagCommand, TagId tagId) {
 
         UserId userId = new UserId(Id.from(tagCommand.getUserId()));
@@ -74,6 +77,7 @@ public class TagScenario {
         tagService.updateTag(tag);
     }
 
+    @Transactional
     public void deleteTag(UserId userId, TagId tagId){
 
         if(!userService.existsById(userId)) {

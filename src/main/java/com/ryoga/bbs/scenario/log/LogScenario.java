@@ -14,6 +14,7 @@ import com.ryoga.bbs.scenario.exception.UserNotFoundException;
 import com.ryoga.bbs.scenario.log.command.LogCommand;
 import com.ryoga.bbs.scenario.log.queryService.LogQueryService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
@@ -30,6 +31,7 @@ public class LogScenario {
         this.userService = userService;
     }
 
+    @Transactional
     public void createLog(LogCommand logCommand){
 
         UserId userId = new UserId(Id.from(logCommand.getUserId()));
@@ -77,6 +79,7 @@ public class LogScenario {
         return logQueryService.getLog(logId.value(), userId.value());
     }
 
+    @Transactional
     public void updateLog(LogCommand logCommand) {
         UserId userId = new UserId(Id.from(logCommand.getUserId()));
         LogId logId = new LogId(Id.from(logCommand.getLogId()));
@@ -108,6 +111,7 @@ public class LogScenario {
         logService.updateLog(log, logTagIds);
     }
 
+    @Transactional
     public void deleteLog(LogId logId, UserId userId) {
         if(!userService.existsById(userId)) {
             throw new UserNotFoundException("指定のユーザーは存在しません。");

@@ -10,8 +10,8 @@ public class TagName {
         if(value == null || value.isEmpty()) {
             throw new DomainLogicInvalidException("タグ名は必須です");
         }
-        if(value.length() > 10) {
-            throw new DomainLogicInvalidException("タグ名は10文字以内で入力してください");
+        if(value.length() > 15) {
+            throw new DomainLogicInvalidException("タグ名は15文字以内で入力してください");
         }
         this.value = value;
     }

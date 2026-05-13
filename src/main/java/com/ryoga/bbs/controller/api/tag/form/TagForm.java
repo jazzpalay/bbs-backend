@@ -9,7 +9,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class TagForm {
     @NotBlank(message = "タグ名は必須です")
-    @Size(max = 10, message = "タグ名は10文字以内です")
+    @Size(max = 15, message = "タグ名は15文字以内です")
     private String tagName;
     @NotBlank(message = "タグ色は必須です")
     private String tagColor;

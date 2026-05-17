@@ -25,11 +25,11 @@ public class LogController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Void> createLog(Authentication authentication, @RequestBody @Valid LogForm logForm) {
+    public ResponseEntity<String> createLog(Authentication authentication, @RequestBody @Valid LogForm logForm) {
         String userId = authentication.getName();
         LogCommand command = LogCommand.toCreateCommand(logForm, userId);
-        logScenario.createLog(command);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        LogId logId = logScenario.createLog(command);
+        return new ResponseEntity<>(logId.value(), HttpStatus.CREATED);
     }
 
     @GetMapping("/all")
@@ -37,7 +37,6 @@ public class LogController {
         String userId = authentication.getName();
         LogListResponse logListResponse = logScenario.getLogList(new UserId(Id.from(userId)));
         return new ResponseEntity<>(logListResponse, HttpStatus.OK);
-
     }
 
     @GetMapping("/{logId}")

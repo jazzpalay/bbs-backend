@@ -32,7 +32,7 @@ public class LogScenario {
     }
 
     @Transactional
-    public void createLog(LogCommand logCommand){
+    public LogId createLog(LogCommand logCommand){
 
         UserId userId = new UserId(Id.from(logCommand.getUserId()));
 
@@ -59,6 +59,7 @@ public class LogScenario {
         );
 
         logService.saveLog(log, logTagIds);
+        return logId;
     }
 
     public LogListResponse getLogList(UserId userId) {

@@ -67,7 +67,7 @@
         <result property="content" column="content"/>
         <result property="logDate" column="log_date"/>
 
-        <collection property="tagList" resultMap="tagResultMap"/>
+        <collection property="tagList" resultMap="tagResultMap" notNullColumn="tag_id"/>
     </resultMap>
     <resultMap id="logListResultMap" type="com.ryoga.bbs.infrastructure.database.command.log.RecordEntity.LogListRecordEntity">
         <result property="userId" column="user_id"/>

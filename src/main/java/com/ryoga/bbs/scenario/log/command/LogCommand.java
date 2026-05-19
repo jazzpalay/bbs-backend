@@ -2,6 +2,7 @@ package com.ryoga.bbs.scenario.log.command;
 
 import com.ryoga.bbs.controller.api.log.form.LogForm;
 import com.ryoga.bbs.controller.api.tag.form.TagForm;
+import com.ryoga.bbs.domain.type.Id;
 import com.ryoga.bbs.scenario.tag.command.TagCommand;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class LogCommand {
 
     public static LogCommand toCreateCommand(LogForm form, String userId) {
         LogCommand command = new LogCommand();
+        command.setLogId(Id.generate().value());
         command.setUserId(userId);
         command.setTitle(form.getTitle());
         command.setContent(form.getContent());

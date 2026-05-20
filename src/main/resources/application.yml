@@ -20,3 +20,9 @@ app:
         http-only: ${COOKIE_HTTP_ONLY}
         secure: ${COOKIE_SECURE}
         same-site: ${COOKIE_SAME_SITE}
+    s3:
+        client:
+            region: ${S3_REGION}
+            bucket-name: ${S3_BUCKET_NAME}
+            logs-image-prefix: ${S3_LOGS_IMAGE_PREFIX}
+            cloudfront-url: ${CLOUDFRONT_URL}

@@ -3,6 +3,7 @@ package com.ryoga.bbs.scenario.log;
 import com.ryoga.bbs.controller.api.log.response.LogDetailResponse;
 import com.ryoga.bbs.controller.api.log.response.LogListResponse;
 import com.ryoga.bbs.controller.api.log.response.LogResponse;
+import com.ryoga.bbs.domain.model.image.ImageFileList;
 import com.ryoga.bbs.domain.model.log.*;
 import com.ryoga.bbs.domain.model.tag.LogTagIds;
 import com.ryoga.bbs.domain.model.tag.TagId;
@@ -11,11 +12,14 @@ import com.ryoga.bbs.domain.model.user.UserService;
 import com.ryoga.bbs.domain.type.Id;
 import com.ryoga.bbs.scenario.exception.LogNotFoundException;
 import com.ryoga.bbs.scenario.exception.UserNotFoundException;
+import com.ryoga.bbs.scenario.image.ImageScenario;
+import com.ryoga.bbs.scenario.image.command.ImageCommandList;
 import com.ryoga.bbs.scenario.log.command.LogCommand;
 import com.ryoga.bbs.scenario.log.queryService.LogQueryService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,15 +28,17 @@ public class LogScenario {
     private final LogService logService;
     private final LogQueryService logQueryService;
     private final UserService userService;
+    private final ImageScenario imageScenario;
 
-    public LogScenario(LogService logService, UserService userService, LogQueryService logQueryService) {
+    public LogScenario(LogService logService, UserService userService, LogQueryService logQueryService, ImageScenario imageScenario) {
         this.logService = logService;
         this.logQueryService = logQueryService;
         this.userService = userService;
+        this.imageScenario = imageScenario;
     }
 
     @Transactional
-    public LogId createLog(LogCommand logCommand){
+    public void createLog(LogCommand logCommand, ImageCommandList imageCommandList) throws IOException {
 
         UserId userId = new UserId(Id.from(logCommand.getUserId()));
 
@@ -40,13 +46,21 @@ public class LogScenario {
             throw new UserNotFoundException("指定のユーザーは存在しません。");
         }
 
-        LogId logId = new LogId(Id.generate());
+        Content content = new Content(logCommand.getContent());
+
+        //画像がある場合S3Uploadシナリオ呼び出し&コンテンツ内のBlobURLをS3用URLに置換
+        if(imageCommandList != null && !imageCommandList.isEmpty()) {
+            ImageFileList imageFileList = imageScenario.uploadImage(imageCommandList);
+            content = logService.replaceBlobUrlToS3Url(content, imageFileList);
+        }
+
+        LogId logId = new LogId(Id.from(logCommand.getLogId()));
 
         Log log = new Log(
                 logId,
                 userId,
                 new Title(logCommand.getTitle()),
-                new Content(logCommand.getContent()),
+                content,
                 new LogDate(logCommand.getLogDate())
         );
 
@@ -59,7 +73,6 @@ public class LogScenario {
         );
 
         logService.saveLog(log, logTagIds);
-        return logId;
     }
 
     public LogListResponse getLogList(UserId userId) {
@@ -81,7 +94,7 @@ public class LogScenario {
     }
 
     @Transactional
-    public void updateLog(LogCommand logCommand) {
+    public void updateLog(LogCommand logCommand, ImageCommandList imageCommandList) throws IOException {
         UserId userId = new UserId(Id.from(logCommand.getUserId()));
         LogId logId = new LogId(Id.from(logCommand.getLogId()));
 
@@ -93,11 +106,19 @@ public class LogScenario {
             throw new LogNotFoundException("指定のログは存在しません。");
         }
 
+        Content content = new Content(logCommand.getContent());
+
+        //画像がある場合S3Uploadシナリオ呼び出し&コンテンツ内のBlobURLをS3用URLに置換
+        if(imageCommandList != null && !imageCommandList.isEmpty()) {
+            ImageFileList imageFileList = imageScenario.uploadImage(imageCommandList);
+            content = logService.replaceBlobUrlToS3Url(content, imageFileList);
+        }
+
         Log log = new Log(
                 logId,
                 userId,
                 new Title(logCommand.getTitle()),
-                new Content(logCommand.getContent()),
+                content,
                 new LogDate(logCommand.getLogDate())
         );
 

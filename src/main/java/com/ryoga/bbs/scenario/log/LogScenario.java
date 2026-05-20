@@ -94,7 +94,7 @@ public class LogScenario {
     }
 
     @Transactional
-    public void updateLog(LogCommand logCommand) {
+    public void updateLog(LogCommand logCommand, ImageCommandList imageCommandList) throws IOException {
         UserId userId = new UserId(Id.from(logCommand.getUserId()));
         LogId logId = new LogId(Id.from(logCommand.getLogId()));
 
@@ -106,11 +106,19 @@ public class LogScenario {
             throw new LogNotFoundException("指定のログは存在しません。");
         }
 
+        Content content = new Content(logCommand.getContent());
+
+        //画像がある場合S3Uploadシナリオ呼び出し&コンテンツ内のBlobURLをS3用URLに置換
+        if(imageCommandList != null && !imageCommandList.isEmpty()) {
+            ImageFileList imageFileList = imageScenario.uploadImage(imageCommandList);
+            content = logService.replaceBlobUrlToS3Url(content, imageFileList);
+        }
+
         Log log = new Log(
                 logId,
                 userId,
                 new Title(logCommand.getTitle()),
-                new Content(logCommand.getContent()),
+                content,
                 new LogDate(logCommand.getLogDate())
         );
 

@@ -32,7 +32,7 @@ public class LogController {
         this.logScenario = logScenario;
     }
 
-    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value ="/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> createLog(
             Authentication authentication,
             @RequestPart("logForm")
@@ -63,11 +63,21 @@ public class LogController {
         return new ResponseEntity<>(logDetailResponse, HttpStatus.OK);
     }
 
-    @PutMapping("/{logId}")
-    public ResponseEntity<Void> updateLog(Authentication authentication, @PathVariable String logId, @RequestBody @Valid LogForm logForm){
+    @PutMapping(value ="/{logId}" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updateLog(
+            Authentication authentication,
+            @PathVariable String logId,
+            @RequestPart("logForm") @Valid
+            LogForm logForm,
+            @RequestPart(value = "metadata", required = false)
+            List<ImageMetadataForm> metadata,
+            @RequestPart(value = "images", required = false)
+            List<MultipartFile> images
+    ) throws IOException {
         String userId = authentication.getName();
-        LogCommand command = LogCommand.toUpdateCommand(logForm, logId, userId);
-        logScenario.updateLog(command);
+        LogCommand logCommand = LogCommand.toUpdateCommand(logForm, logId, userId);
+        ImageCommandList imageCommandList = ImageCommandList.toCreateCommand(userId, logCommand.getLogId(), metadata, images);
+        logScenario.updateLog(logCommand, imageCommandList);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -1,6 +1,9 @@
 package com.ryoga.bbs.domain.model.log;
 
+import com.ryoga.bbs.domain.model.image.ImageFile;
+import com.ryoga.bbs.domain.model.image.ImageFileList;
 import com.ryoga.bbs.domain.type.DomainLogicInvalidException;
+import com.ryoga.bbs.scenario.image.command.ImageCommand;
 
 public class Content {
     private final String content;
@@ -14,4 +17,11 @@ public class Content {
     public String value() {
         return content;
     }
+
+    public Content replace(String before, String after) {
+        return new Content(
+                this.content.replace(before, after)
+        );
+    }
+
 }

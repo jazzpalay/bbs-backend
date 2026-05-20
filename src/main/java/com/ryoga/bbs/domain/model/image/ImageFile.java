@@ -10,6 +10,7 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -24,12 +25,24 @@ public class ImageFile {
 
     private final BlobUrl blobUrl;
 
+    private static final List<String> ALLOWED_IMAGE_TYPES = List.of(
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+    );
+
     public ImageFile(ImageId imageId,MultipartFile fileData, BlobUrl blobUrl) {
         if(imageId == null) {
             throw new DomainLogicInvalidException("imageIdはnullにできません");
         }
         if(fileData == null) {
             throw new DomainLogicInvalidException("fileDataはnullにできません");
+        }
+        if(fileData.getSize() > 5 * 1024 * 1024) {
+            throw new DomainLogicInvalidException("fileDataのファイルサイズが大きすぎます");
+        }
+        if(!ALLOWED_IMAGE_TYPES.contains(fileData.getContentType())) {
+            throw new DomainLogicInvalidException("fileDataのファイルタイプが許可されていません");
         }
         String originalFileName = fileData.getOriginalFilename();
         if(originalFileName == null) {

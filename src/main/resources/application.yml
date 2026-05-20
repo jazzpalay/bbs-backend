@@ -8,6 +8,10 @@ spring:
         baseline-version: 2.0
         enabled: true
         baseline-on-migrate: true
+    servlet:
+        multipart:
+            max-file-size: 5MB
+            max-request-size: 5MB
 mybatis:
     mapper-locations: classpath*:db/mapper/**/*.xml
 jwt:

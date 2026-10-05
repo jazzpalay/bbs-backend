@@ -3,6 +3,11 @@ spring:
     exclude:
       - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
       - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+  datasource:
+    url: jdbc:mysql://localhost:3306/bbs?useSSL=false&allowPublicKeyRetrieval=true&serverTimeZone=Asia/Tokyo
+    username: bbsuser
+    password: bbspass
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
 mybatis:
   mapper-locations: classpath:db/mapper/**/*.xml

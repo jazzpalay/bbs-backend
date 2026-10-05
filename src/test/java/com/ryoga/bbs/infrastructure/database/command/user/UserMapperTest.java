@@ -8,36 +8,17 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @MybatisTest
-@Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @MapperScan("com.ryoga.bbs.infrastructure.database.command.user")
 class UserMapperTest {
 
     @Autowired
     UserMapper mapper;
-
-    @Container
-    static MySQLContainer<?> mySql = new MySQLContainer<>("mysql:8.0")
-            .withDatabaseName("bbs")
-            .withUsername("bbsuser")
-            .withPassword("bbspass");
-
-    @DynamicPropertySource
-    static void overRideProps(DynamicPropertyRegistry registry){
-        registry.add("spring.datasource.url", mySql::getJdbcUrl);
-        registry.add("spring.datasource.username", mySql::getUsername);
-        registry.add("spring.datasource.password", mySql::getPassword);
-    }
 
     @Nested
     class findIdById{

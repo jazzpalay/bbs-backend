@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ryoga.bbs.infrastructure.database.command.task.TaskMapper">
+    <insert id="save">
+        INSERT INTO tasks(id, user_id, task_name, description, status, priority, started_date, due_date, completed_date)
+        VALUES(#{id}, #{userId}, #{taskName}, #{description}, #{status}, #{priority}, #{startedDate}, #{dueDate}, #{completedDate})
+    </insert>
+</mapper>

@@ -7,4 +7,30 @@
         INSERT INTO tasks(id, user_id, task_name, description, status, priority, started_date, due_date, completed_date)
         VALUES(#{id}, #{userId}, #{taskName}, #{description}, #{status}, #{priority}, #{startedDate}, #{dueDate}, #{completedDate})
     </insert>
+    <select id="findTask" resultMap="taskResultMap">
+        SELECT
+        id,
+        user_id,
+        task_name,
+        description,
+        status,
+        priority,
+        started_date,
+        due_date,
+        completed_date
+        FROM tasks
+        WHERE id = #{id} AND user_id = #{userId}
+    </select>
+
+    <resultMap id="taskResultMap" type="com.ryoga.bbs.infrastructure.database.command.task.RecordEntity.TaskRecordEntity">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="taskName" column="task_name"/>
+        <result property="description" column="description"/>
+        <result property="status" column="status"/>
+        <result property="priority" column="priority"/>
+        <result property="startedDate" column="started_date"/>
+        <result property="dueDate" column="due_date"/>
+        <result property="completedDate" column="completed_date"/>
+    </resultMap>
 </mapper>

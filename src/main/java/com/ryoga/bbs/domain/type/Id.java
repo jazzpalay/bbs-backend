@@ -21,7 +21,11 @@ public class Id {
     }
 
     public static Id from(String id){
-        return new Id(UUID.fromString(id));
+        try {
+            return new Id(UUID.fromString(id));
+        } catch (IllegalArgumentException e) {
+            throw new DomainLogicInvalidException("IDの形式が不正です");
+        }
     }
 
     public static Id generate(){

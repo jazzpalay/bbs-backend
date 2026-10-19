@@ -68,7 +68,7 @@ public class SecurityConfig {
                         .csrfTokenRequestHandler(requestHandler) // これでCSRFチェックが強制される
                         .ignoringRequestMatchers(
                                 "/api/v1/auth/sign-in", "/api/v1/auth/sign-up",
-                                "/api/v1/users/me", "/api/v1/tags/**", "/api/v1/logs/**"
+                                "/api/v1/users/me", "/api/v1/tags/**", "/api/v1/logs/**", "/api/v1/tasks/**"
                         )
                 )
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))

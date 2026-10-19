@@ -1,6 +1,8 @@
 package com.ryoga.bbs.controller.error;
 
+import com.ryoga.bbs.domain.type.DomainLogicInvalidException;
 import com.ryoga.bbs.scenario.exception.ScenarioAbortException;
+import com.ryoga.bbs.scenario.exception.TaskNotFoundException;
 import com.ryoga.bbs.scenario.exception.UnauthorizedException;
 import com.ryoga.bbs.scenario.exception.UserNotFoundException;
 import org.apache.tomcat.websocket.AuthenticationException;
@@ -33,6 +35,20 @@ public class ErrorResponseHandler {
     public ResponseEntity<Object> handleUnauthorized(UnauthorizedException exception) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorResponse(exception.getClass().getSimpleName(), exception.getMessage()));
+    }
+
+    @ExceptionHandler({TaskNotFoundException.class})
+    public ResponseEntity<Object> handleTaskNotFound(TaskNotFoundException exception) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(exception.getClass().getSimpleName(), exception.getMessage()));
+    }
+
+    @ExceptionHandler({DomainLogicInvalidException.class})
+    public ResponseEntity<Object> handleDomainLogicInvalid(DomainLogicInvalidException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(exception.getClass().getSimpleName(), exception.getMessage()));
     }
 
